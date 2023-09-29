@@ -1,170 +1,224 @@
 AGENDA = {}
 
 
-def mostrar_contatos():
+def show_contacts():
+    """
+    Function used to show contact in terminal
+
+    :return: A dictionary with the contac data
+    """
+
     try:
-        print('Mostrando todos os contatos: \n')
-        for contato in AGENDA:
-            buscar_contatos(contato)
-        print('FIM')
+        print('Showing all contacts: \n')
+        for contact in AGENDA:
+            search_contact(contact)
+        print('END')
     except KeyError:
-        print('Nenhum contato encontrado')
-    except Exception as erro:
-        print('Erro inesperado')
-        print(erro)
+        print('Was not find eny contact')
+    except Exception as error:
+        print('Error')
+        print(error)
 
 
-def buscar_contatos(contato):
-        try:
-            print('Nome: ', contato)
-            print('Telefone: ', AGENDA[contato]['Telefone'])
-            print('Email: ', AGENDA[contato]['Email'])
-            print('Endereco: ', AGENDA[contato]['Endereco'])
-            print('--------------------------------------------')
-        except Exception as erro:
-            print('Contato nao encontrado')
-            print(erro)
+def search_contact(contact):
+    """
+    Function used to search contact
+
+    :param contact: Receive a string with the name of tha contact
+    :return: A dictionary with the data of the contact
+    """
+
+    try:
+        print('Name: ', contact)
+        print('Phone: ', AGENDA[contact]['Phone'])
+        print('Email: ', AGENDA[contact]['Email'])
+        print('Address: ', AGENDA[contact]['Address'])
+        print('--------------------------------------------')
+    except Exception as error:
+        print('Contact was not found')
+        print(error)
 
 
-def ler_detelhes_contato():
-    telefone = input('Digite o nome do telefone: ')
-    email = input('Digite o nome do email: ')
-    endereco = input('Digite o nome do endereco: ')
-    return telefone, email, endereco
+def read_contact():
+    """
+    Function used to collect contact data
+
+    :return: The phone number as INT email as STRING and address as STRING
+    """
+
+    phone = input('Type phone number: ')
+    email = input('Type e-mail address: ')
+    address = input('Type address: ')
+    return phone, email, address
 
 
-def incluir_editar_contatos(contato, telefone, email, endereco):
+def input_edit_contact(contact, phone, email, address):
+    """
+    Function for add and edit contacts
 
-     
-    AGENDA[contato] = {
-        'Telefone': telefone,
+    :param contact: a STING with the contact name
+    :param phone: an STING with the phone number
+    :param email: a STING with the contact email
+    :param address: a STING with the contact address
+    :return: Does not return anything
+    """
+
+    AGENDA[contact] = {
+        'Phone': phone,
         'Email': email,
-        'Endereco': endereco,  
+        'Address': address,
     }
-    print('\nContato {} adicionado/editado com sucesso'.format(contato))
+    print('\nThe {} contact was added with success'.format(contact))
 
 
-def excluir_contatos(contato):
+def delete_contact(contact):
+    """
+    Function to delete contact
+
+    :param contact: a STING with the contact name
+    :return: Does not return anything
+    """
+
     try:
-        AGENDA.pop(contato)
-        salvar()
-        print('\nContato {} excluido com sucesso'.format(contato)) 
+        AGENDA.pop(contact)
+        save()
+        print('\nThe {} contact was deleted.'.format(contact))
     except KeyError:
-        print('Contato nao encontrado')
-        print(erro)
-    except Exception as erro:
-        print('Erro inesperado')
-        print(erro)
+        print('Contact not found')
+    except Exception as error:
+        print('Error')
+        print(error)
 
 
-def exportar_contatos(nome_do_arquivo):
+def export_contact(file_name):
+    """
+    Function to export contact to a file
+
+    :param file_name: Name of a file
+    :return: Does not return anything
+    """
+
     try:
-        with open(nome_do_arquivo, 'w') as arquivo:
-            for contato in AGENDA:
-                telefone = AGENDA[contato]['Telefone']
-                email = AGENDA[contato]['Email']
-                endereco = AGENDA[contato]['Endereco']
-                arquivo.write('{},{},{},{}\n'.format(contato, telefone, email, endereco))
-        print('Agenda exportada com sucesso!!!')
-    except Exception as erro:
-        print('Erro: {}'.format(erro))
+        with open(file_name, 'w') as file:
+            for contact in AGENDA:
+                phone = AGENDA[contact]['Phone']
+                email = AGENDA[contact]['Email']
+                address = AGENDA[contact]['Address']
+                file.write('{},{},{},{}\n'.format(contact, phone, email, address))
+        print('Agenda exported with success!!!')
+    except Exception as error:
+        print('Error: {}'.format(error))
 
 
-def importar_contatos(nome_do_arquivo):
+def import_contact(file_name):
+    """
+    Function to import contact to a file
+
+    :param file_name: Name of a file
+    :return: Does not return anything
+    """
+
     try:
-        with open(nome_do_arquivo, 'r') as arquivo:
-            linhas = arquivo.readlines()
-            for linha in linhas:
-                detalhes = linha.strip().split(',')
-                nome = detalhes[0]
-                telefone = detalhes[1]
-                email = detalhes[2]
-                endereco = detalhes[3]
+        with open(file_name, 'r') as file:
+            lines = file.readlines()
+            for line in lines:
+                details = line.strip().split(',')
+                name = details[0]
+                phone = details[1]
+                email = details[2]
+                address = details[3]
 
-            incluir_editar_contatos(nome, telefone, email, endereco)
-    except Exception as erro:
-        print('Erro inesperado')
-        print(erro)
-
-
-def salvar():
-    exportar_contatos('database.csv')
-    
-
-def carregar():
-    importar_contatos('database.csv')
+            input_edit_contact(name, phone, email, address)
+    except Exception as error:
+        print('Error')
+        print(error)
 
 
-def imprimir_menu():
+def save():
+    export_contact('database.csv')
+
+
+def load():
+    import_contact('database.csv')
+
+
+def print_menu():
+    """
+    Function to print the menu
+
+    :return:
+    """
+
     print('''
 ------------------------------------------
-1 - Mostrar todos os contatos
-2 - Buscar contato
-3 - Incluir contato
-4 - Editar contato
-5 - excluir contato
-6 - Exportar contatos .csv
-7 - Importar contatos .csv
-0 - Sair
+1 - Show all contacts
+2 - Search contact
+3 - Add contact
+4 - Edit contact
+5 - Delete contact
+6 - Export contact .csv
+7 - Import contact .csv
+0 - Exit
 ------------------------------------------
 ''')
 
-#INICIO DO PROGRAMA
 
-carregar()
+# Begin of Program
+
+load()
 while True:
-    imprimir_menu()
+    print_menu()
 
-    opcao = input('Escolha uma opcao: ')
+    options = input('Choose an option: ')
 
     print('\n--#--#--#--#--#--#--#--#--#--#\n')
 
-    if opcao == '0':
-        salvar()
-        print('>>>> Fechando programa')
+    if options == '0':
+        save()
+        print('>>>> Closing program')
         break
 
-    elif opcao == '1':
-        mostrar_contatos()
+    elif options == '1':
+        show_contacts()
 
-    elif opcao == '2':
-        contato = input('Digite o nome do contato que deseja buscar: ')
-        print('\nMostrando o contato do {}:\n'.format(contato))
-        buscar_contatos(contato)
+    elif options == '2':
+        contact = input('Type the name of the contact that you want to search: ')
+        print('\nMShowing {} contact:\n'.format(contact))
+        search_contact(contact)
 
-    elif opcao == '3':
-        contato = input('Digite o nome do contato que deseja incluir: ')
-
-        try:
-            AGENDA[contato]
-            print('Ja existe um contato com o nome: {}'.format(contato))
-
-        except KeyError:
-            telefone, email, endereco = ler_detelhes_contato()
-            incluir_editar_contatos(contato, telefone, email, endereco)
-
-    elif opcao == '4':
-        contato = input('Digite o nome do contato que deseja editar: ')
+    elif options == '3':
+        contact = input('Type the name of the contact that you want to add: ')
 
         try:
-            AGENDA[contato]
-            telefone, email, endereco = ler_detelhes_contato()
-            incluir_editar_contatos(contato, telefone, email, endereco)
-        except KeyError:
-            print('Nao foi encontrado um contato com o nome: {}'.format(contato))
-    
-    elif opcao == '5':
-        contato = input('Digite o nome do contato que deseja excluir: ')
-        excluir_contatos(contato)
-   
-    elif opcao == '6':
-        nome_do_arquivo = input('Digite o nome do arquivo: ')
-        exportar_contatos(nome_do_arquivo)
+            AGENDA[contact]
+            print('Already have a contact with the name: {}'.format(contact))
 
-    elif opcao == '7':
-        nome_do_arquivo = input('Digite o nome do arquivo: ')
-        importar_contatos(nome_do_arquivo)
+        except KeyError:
+            phone, email, address = read_contact()
+            input_edit_contact(contact, phone, email, address)
+
+    elif options == '4':
+        contact = input('Type the name of the contact that you want to edit: ')
+
+        try:
+            AGENDA[contact]
+            phone, email, address = read_contact()
+            input_edit_contact(contact, phone, email, address)
+        except KeyError:
+            print('Was not found a contact with the name of: {}'.format(contact))
+
+    elif options == '5':
+        contact = input('Type the name of the contact that you want to delete: ')
+        delete_contact(contact)
+
+    elif options == '6':
+        file_name = input('Type the file name: ')
+        export_contact(file_name)
+
+    elif options == '7':
+        file_name = input('Type the file name: ')
+        import_contact(file_name)
 
     else:
-        print('>>>> Opção inválida')
+        print('>>>> Invalid Option')
     print()
